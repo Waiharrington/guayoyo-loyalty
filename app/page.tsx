@@ -8,7 +8,7 @@ import { Card } from "@/app/components/ui/Card";
 import { ArrowRight, User, KeyRound } from "lucide-react";
 import Image from "next/image";
 import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
-import { useRouter } from "next/navigation";
+
 
 // Wrap content in provider for the page
 export default function Page() {
@@ -26,7 +26,6 @@ function LandingContent() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +81,7 @@ function LandingContent() {
               <Button
                 size="lg"
                 onClick={() => setView("register")}
-                className="w-full text-lg shadow-amber-500/20 shadow-xl"
+                className="w-full text-lg shadow-amber-500/20 shadow-xl text-white"
               >
                 Registrarme
                 <ArrowRight className="ml-2 w-5 h-5" />

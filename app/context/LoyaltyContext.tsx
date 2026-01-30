@@ -9,6 +9,7 @@ interface User {
     name: string;
     visits: number;
     redeemedLevels: number[];
+    createdAt?: string;
 }
 
 interface LoyaltyContextType {
@@ -81,7 +82,8 @@ export function LoyaltyProvider({ children }: { children: React.ReactNode }) {
                     cedula: profile.cedula,
                     name: profile.name,
                     visits: count || 0,
-                    redeemedLevels: redemptions?.map(r => r.level_id) || []
+                    redeemedLevels: redemptions?.map(r => r.level_id) || [],
+                    createdAt: profile.created_at
                 };
                 setUser(newUser);
                 localStorage.setItem("guayoyo_user", JSON.stringify(newUser));
@@ -133,7 +135,7 @@ export function LoyaltyProvider({ children }: { children: React.ReactNode }) {
     const register = async (cedula: string, name: string, phone: string) => {
         if (!isSupabaseConfigured) {
             // LocalStorage Fallback
-            const newUser: User = { cedula, name, visits: 0, redeemedLevels: [] };
+            const newUser: User = { cedula, name, visits: 0, redeemedLevels: [], createdAt: new Date().toISOString() };
             const dbString = localStorage.getItem("guayoyo_db");
             const db = dbString ? JSON.parse(dbString) : {};
             db[cedula] = newUser;

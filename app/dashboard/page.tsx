@@ -5,7 +5,7 @@ import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { QrCode, Gift, CheckCircle2, Lock, Star, LogOut, Trophy } from "lucide-react";
+import { QrCode, Gift, CheckCircle2, Lock, LogOut } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
 
@@ -54,7 +54,7 @@ function DashboardContent() {
     // BUT user also said "ya después de 25 idas... tarjeta preferencial".
     // Let's implement a cumulative system for simplicity of "Total Visits" but display relative progress on cards.
 
-    let currentVisits = user.visits;
+    const currentVisits = user.visits;
 
     const getLevelStatus = (levelIndex: number) => {
         // Calculate accumulated visits needed for PREVIOUS levels
@@ -132,35 +132,64 @@ function DashboardContent() {
                                 exit={{ opacity: 0, scale: 0.9, rotateX: -10 }}
                                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                             >
-                                <Card className={`relative overflow-hidden border-0 h-64 flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-zinc-900'} shadow-2xl`}>
-                                    {/* Background Gradient Mesh */}
-                                    <div className={`absolute inset-0 opacity-20 bg-gradient-to-br ${level.color}`} />
+                                <Card className={`relative overflow-hidden border-0 h-56 flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-6`}>
+                                    {/* Texture / Noise */}
+                                    <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
 
-                                    <div className="relative z-10 flex justify-between items-start">
-                                        <div className="p-2 bg-black/20 backdrop-blur rounded-lg">
-                                            <h3 className="font-bold text-lg">{level.name}</h3>
-                                            <p className="text-xs opacity-75">{level.isVip ? "Estatus Legendario" : `${required - progress} visitas para el premio`}</p>
+                                    {/* Top Row: Brand & Level */}
+                                    <div className="relative z-10 flex justify-between items-center mb-6">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
+                                                <span className="font-bold font-serif italic text-white">G</span>
+                                            </div>
+                                            <span className="font-semibold tracking-wider text-white/90">Guayoyo</span>
                                         </div>
-                                        <div className="p-2 bg-white/10 rounded-full">
-                                            {level.isVip ? <Trophy className="text-yellow-100 w-6 h-6" /> : <Star className="text-yellow-400 w-6 h-6" />}
+                                        <div className="text-right">
+                                            <span className="block text-xs uppercase tracking-widest opacity-70">NIVEL</span>
+                                            <span className={`font-bold italic ${level.isVip ? 'text-white' : 'text-amber-500'}`}>{level.name}</span>
                                         </div>
                                     </div>
 
-                                    <div className="relative z-10 mt-auto">
-                                        <div className="flex justify-between items-end mb-2">
-                                            <span className="text-4xl font-bold">{progress}<span className="text-lg text-white/50">/{required}</span></span>
-                                            <span className="text-xs uppercase tracking-wider font-semibold opacity-70">Visitas</span>
+                                    {/* Chip & Signal */}
+                                    <div className="relative z-10 flex items-center gap-4 mb-4">
+                                        <div className="w-12 h-9 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
+                                        <div className="flex flex-col gap-1">
+                                            <div className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
+                                                <div className="w-4 h-4 rounded-full border border-white/30" />
+                                            </div>
                                         </div>
+                                    </div>
 
-                                        {/* Progress Bar */}
-                                        <div className="h-4 w-full bg-black/30 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
-                                            <motion.div
-                                                className={`h-full bg-gradient-to-r ${level.color}`}
-                                                initial={{ width: 0 }}
-                                                animate={{ width: `${percent}%` }}
-                                                transition={{ duration: 1 }}
-                                            />
+                                    {/* Card Number (Cedula) */}
+                                    <div className="relative z-10 mb-6">
+                                        <p className="font-mono text-xl sm:text-2xl tracking-[0.15em] text-white shadow-black drop-shadow-md">
+                                            {user.cedula.replace(/(\d{4})/g, '$1 ').trim()}
+                                        </p>
+                                    </div>
+
+                                    {/* Bottom Row: Details */}
+                                    <div className="relative z-10 flex justify-between items-end">
+                                        <div className="flex flex-col">
+                                            <span className="text-[0.6rem] uppercase tracking-widest opacity-60">NOMBRE</span>
+                                            <span className="font-medium tracking-wide uppercase truncate max-w-[150px]">{user.name}</span>
                                         </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[0.6rem] uppercase tracking-widest opacity-60">VENCE</span>
+                                            <span className="font-medium tracking-wide font-mono">
+                                                {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { month: '2-digit', year: '2-digit' }) : '12/99'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Progress Strip (Subtle) */}
+                                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+                                        <div
+                                            className={`h-full bg-gradient-to-r ${level.color}`}
+                                            style={{ width: `${percent}%` }}
+                                        />
+                                    </div>
+                                    <div className="absolute bottom-2 right-4 text-[0.6rem] text-white/40">
+                                        {progress} / {required} Visitas
                                     </div>
                                 </Card>
                             </motion.div>
