@@ -136,6 +136,17 @@ function DashboardContent() {
                                     {/* Texture / Noise */}
                                     <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
 
+                                    {/* Visual Progress Overlay (Locked Sections) */}
+                                    <div className="absolute inset-0 z-20 flex w-full h-full pointer-events-none rounded-2xl overflow-hidden">
+                                        {Array.from({ length: required }).map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className={`flex-1 border-r border-white/5 last:border-r-0 transition-all duration-500 ${i < progress ? 'bg-transparent' : 'bg-black/60 function-grayscale backdrop-blur-[0.5px]'
+                                                    }`}
+                                            />
+                                        ))}
+                                    </div>
+
                                     {/* Top Row: Brand & Level */}
                                     <div className="relative z-10 flex justify-between items-center">
                                         <div className="flex items-center gap-2">
@@ -231,9 +242,9 @@ function DashboardContent() {
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCompleted ? 'bg-lime-500/20 text-lime-500' : 'bg-zinc-800'}`}>
                                     {isRedeemed ? <CheckCircle2 className="w-5 h-5" /> : (isCompleted ? <Gift className="w-5 h-5 animate-pulse" /> : <span className="font-bold text-zinc-600">{index + 1}</span>)}
                                 </div>
-                                <div className={`${!isUnlocked ? 'blur-sm select-none opacity-50' : ''} transition-all duration-300`}>
-                                    <p className={`font-medium ${isCompleted ? 'text-white' : 'text-zinc-400'}`}>
-                                        {isUnlocked ? level.prize : "Premio Sorpresa ????"}
+                                <div>
+                                    <p className={`font-medium transition-all duration-300 ${isCompleted ? 'text-white' : 'text-zinc-500 blur-[2px] select-none'}`}>
+                                        {isCompleted ? level.prize : "Premio Sorpresa ????"}
                                     </p>
                                     <p className="text-xs text-zinc-500">{level.name}</p>
                                 </div>
