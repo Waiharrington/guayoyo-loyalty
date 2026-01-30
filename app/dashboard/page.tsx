@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { QrCode, Gift, Lock, LogOut, Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
-import { Html5QrcodeScanner } from "html5-qrcode";
 
 // Levels Configuration
 const LEVELS = [
@@ -64,7 +63,7 @@ function DashboardContent() {
     // BUT user also said "ya después de 25 idas... tarjeta preferencial".
     // Let's implement a cumulative system for simplicity of "Total Visits" but display relative progress on cards.
 
-    const currentVisits = user.visits;
+    const currentVisits = user.visits || 0;
 
     const getLevelStatus = (levelIndex: number) => {
         // Calculate accumulated visits needed for PREVIOUS levels
@@ -88,54 +87,58 @@ function DashboardContent() {
     const [isScanning, setIsScanning] = useState(false);
 
     useEffect(() => {
+        let scanner: any;
         if (isScanning) {
-            const scanner = new Html5QrcodeScanner(
-                "reader",
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                /* verbose= */ false
-            );
+            import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
+                if (!isScanning) return;
 
-            scanner.render(
-                (decodedText) => {
-                    if (decodedText === "GUAYOYO_SECRET_V1") {
-                        scanner.clear();
-                        setIsScanning(false);
-                        addVisit();
+                scanner = new Html5QrcodeScanner(
+                    "reader",
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    /* verbose= */ false
+                );
 
-                        // Confetti check
-                        // We check against (current + 1) because addVisit state update might be async/batched
-                        let accumulated = 0;
-                        const newVisits = user.visits + 1;
-                        for (const level of LEVELS) {
-                            accumulated += level.visitsRequired;
-                            if (newVisits === accumulated) {
-                                confetti({
-                                    particleCount: 150,
-                                    spread: 70,
-                                    origin: { y: 0.6 }
-                                });
-                                break;
+                scanner.render(
+                    (decodedText: string) => {
+                        if (decodedText === "GUAYOYO_SECRET_V1") {
+                            scanner.clear();
+                            setIsScanning(false);
+                            addVisit();
+
+                            // Confetti check
+                            let accumulated = 0;
+                            const newVisits = user.visits + 1;
+                            for (const level of LEVELS) {
+                                accumulated += level.visitsRequired;
+                                if (newVisits === accumulated) {
+                                    confetti({
+                                        particleCount: 150,
+                                        spread: 70,
+                                        origin: { y: 0.6 }
+                                    });
+                                    break;
+                                }
                             }
+                            // Always small confetti for success
+                            confetti({
+                                particleCount: 50,
+                                spread: 40,
+                                origin: { y: 0.7 }
+                            });
+                        } else {
+                            console.warn("Invalid QR", decodedText);
                         }
-                        // Always small confetti for success
-                        confetti({
-                            particleCount: 50,
-                            spread: 40,
-                            origin: { y: 0.7 }
-                        });
-                    } else {
-                        // Handle invalid code? For now just ignore or alert
-                        // alert("Código inválido");
-                        console.warn("Invalid QR", decodedText);
+                    },
+                    (error: any) => {
+                        // console.warn(error);
                     }
-                },
-                (error) => {
-                    // console.warn(error);
-                }
-            );
+                );
+            }).catch(console.error);
 
             return () => {
-                scanner.clear().catch(console.error);
+                if (scanner) {
+                    scanner.clear().catch(console.error);
+                }
             };
         }
     }, [isScanning, addVisit, user.visits]);
@@ -152,7 +155,7 @@ function DashboardContent() {
         <div className="min-h-screen pb-20 p-4 flex flex-col max-w-md mx-auto relative">
             <header className="flex justify-between items-center mb-8 pt-4">
                 <div>
-                    <h1 className="text-2xl font-bold">Hola, {user.name.split(" ")[0]}</h1>
+                    <h1 className="text-2xl font-bold">Hola, {user.name?.split(" ")[0] || "Miembro"}</h1>
                     <p className="text-zinc-400 text-sm">Miembro Guayoyo</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={logout}>
@@ -317,7 +320,7 @@ function DashboardContent() {
             <div className="grid grid-cols-2 gap-3">
                 {LEVELS.map((level, index) => {
                     const { isCompleted, isUnlocked } = getLevelStatus(index);
-                    const isRedeemed = user.redeemedLevels.includes(level.id);
+                    const isRedeemed = user.redeemedLevels?.includes(level.id) || false;
 
                     return (
                         <div
