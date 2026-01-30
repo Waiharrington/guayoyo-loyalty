@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/app/components/ui/Button";
 import { Input } from "@/app/components/ui/Input";
 import { Card } from "@/app/components/ui/Card";
-import { Coffee, ArrowRight, User, KeyRound } from "lucide-react";
+import { ArrowRight, User, KeyRound } from "lucide-react";
+import Image from "next/image";
 import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
 import { useRouter } from "next/navigation";
 
@@ -58,7 +59,16 @@ function LandingContent() {
           >
             <div className="relative">
               <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
-              <Coffee className="w-24 h-24 text-primary relative z-10" />
+              <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
+              <div className="relative z-10 w-32 h-32">
+                <Image
+                  src="/logo.png"
+                  alt="Guayoyo Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
