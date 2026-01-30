@@ -157,33 +157,36 @@ function LandingContent() {
 
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2 text-left">
-                  <label className="text-xs font-medium text-zinc-500 ml-1">Cédula / ID</label>
+                  <label className="text-xs font-medium text-zinc-400 ml-1">Cédula / ID</label>
                   <Input
                     placeholder="Ej. 12345678"
                     value={cedula}
                     onChange={(e) => setCedula(e.target.value)}
+                    className="text-white placeholder:text-zinc-600"
                   />
                 </div>
                 <div className="space-y-2 text-left">
-                  <label className="text-xs font-medium text-zinc-500 ml-1">Nombre Completo</label>
+                  <label className="text-xs font-medium text-zinc-400 ml-1">Nombre Completo</label>
                   <Input
                     placeholder="Tu nombre"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    className="text-white placeholder:text-zinc-600"
                   />
                 </div>
                 <div className="space-y-2 text-left">
-                  <label className="text-xs font-medium text-zinc-500 ml-1">Teléfono (Opcional)</label>
+                  <label className="text-xs font-medium text-zinc-400 ml-1">Teléfono (Opcional)</label>
                   <Input
-                    placeholder="+58 ..."
+                    placeholder="+507 ..."
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    className="text-white placeholder:text-zinc-600"
                   />
                 </div>
 
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
-                <Button type="submit" className="w-full mt-4">
+                <Button type="submit" className="w-full mt-4 text-white font-semibold shadow-lg shadow-amber-500/10">
                   Registrarme
                 </Button>
 
