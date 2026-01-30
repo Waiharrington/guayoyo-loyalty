@@ -225,43 +225,56 @@ function DashboardContent() {
 
             {/* Rewards / Levels List */}
             <h3 className="font-semibold text-lg mb-4">Tus Recompensas</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
                 {LEVELS.map((level, index) => {
                     const { isCompleted, isUnlocked } = getLevelStatus(index);
                     const isRedeemed = user.redeemedLevels.includes(level.id);
 
                     return (
-                        <div key={level.id} className={`relative p-4 rounded-xl border ${isUnlocked ? 'border-zinc-800 bg-zinc-900/50' : 'border-zinc-800/50 bg-black/40'} flex items-center justify-between`}>
+                        <div
+                            key={level.id}
+                            className={`relative p-4 rounded-xl border flex flex-col items-center justify-between text-center gap-3 transition-all duration-300
+                                ${isRedeemed ? 'border-zinc-800 bg-zinc-900/30 opacity-60 grayscale' :
+                                    isUnlocked ? 'border-zinc-800 bg-zinc-900/50' : 'border-zinc-800/50 bg-black/40'}
+                            `}
+                        >
                             {!isUnlocked && (
                                 <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] z-20 rounded-xl flex items-center justify-center">
-                                    <Lock className="text-zinc-500 w-6 h-6" />
+                                    <Lock className="text-zinc-500 w-8 h-8" />
                                 </div>
                             )}
 
-                            <div className="flex items-center gap-4">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCompleted ? 'bg-lime-500/20 text-lime-500' : 'bg-zinc-800'}`}>
-                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5" /> : (isCompleted ? <Gift className="w-5 h-5 animate-pulse" /> : <span className="font-bold text-zinc-600">{index + 1}</span>)}
+                            <div className="flex flex-col items-center gap-2 w-full">
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-1 ${isCompleted && !isRedeemed ? 'bg-lime-500/20 text-lime-500' : 'bg-zinc-800 text-zinc-600'}`}>
+                                    {isRedeemed ? <CheckCircle2 className="w-6 h-6" /> : (isCompleted ? <Gift className="w-6 h-6 animate-pulse" /> : <span className="font-bold text-lg">{index + 1}</span>)}
                                 </div>
-                                <div>
-                                    <p className={`font-medium transition-all duration-300 ${isCompleted ? 'text-white' : 'text-zinc-500 blur-[2px] select-none'}`}>
-                                        {isCompleted ? level.prize : "Premio Sorpresa ????"}
+                                <div className="w-full">
+                                    <p className={`font-medium text-sm leading-tight mb-1 transition-all duration-300 ${isCompleted || isRedeemed ? 'text-white' : 'text-zinc-500 blur-[2px] select-none'}`}>
+                                        {isCompleted || isRedeemed ? level.prize : "Premio\nSorpresa"}
                                     </p>
-                                    <p className="text-xs text-zinc-500">{level.name}</p>
+                                    <p className="text-[0.65rem] uppercase tracking-wider text-zinc-500">{level.name}</p>
                                 </div>
                             </div>
 
-                            {isCompleted && !isRedeemed && (
-                                <Button
-                                    size="sm"
-                                    className="bg-white text-black hover:bg-zinc-200"
-                                    onClick={() => setShowRedeemModal({ show: true, levelId: level.id })}
-                                >
-                                    Redimir
-                                </Button>
-                            )}
-                            {isRedeemed && (
-                                <span className="text-xs text-green-500 font-medium px-3 py-1 bg-green-500/10 rounded-full">Redimido</span>
-                            )}
+                            <div className="w-full mt-auto pt-2">
+                                {isCompleted && !isRedeemed ? (
+                                    <Button
+                                        size="sm"
+                                        className="w-full bg-white text-black hover:bg-zinc-200 h-8 text-xs font-semibold"
+                                        onClick={() => setShowRedeemModal({ show: true, levelId: level.id })}
+                                    >
+                                        Redimir
+                                    </Button>
+                                ) : (
+                                    <div className="h-8 flex items-center justify-center">
+                                        {isRedeemed ? (
+                                            <span className="text-[0.65rem] font-bold text-zinc-400 uppercase tracking-widest border border-zinc-700 px-2 py-1 rounded-full">Redimido</span>
+                                        ) : (
+                                            <div className="h-1 w-12 bg-zinc-800 rounded-full" />
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     );
                 })}
