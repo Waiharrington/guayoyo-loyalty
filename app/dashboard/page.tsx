@@ -82,7 +82,13 @@ function DashboardContent() {
 
                 scanner = new Html5QrcodeScanner(
                     "reader",
-                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    {
+                        fps: 20, // Increased from 10 to 20 for faster feedback
+                        qrbox: { width: 250, height: 250 },
+                        videoConstraints: {
+                            facingMode: { exact: "environment" } // Force back camera
+                        }
+                    },
                     /* verbose= */ false
                 );
 
