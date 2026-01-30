@@ -27,22 +27,22 @@ function LandingContent() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(cedula)) {
+    if (await login(cedula)) {
       // Success is handled in context (redirect)
     } else {
       setError("Usuario no encontrado. Regístrate primero.");
     }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!cedula || !name) {
       setError("Por favor completa los campos.");
       return;
     }
-    register(cedula, name, phone);
+    await register(cedula, name, phone);
   };
 
   return (
