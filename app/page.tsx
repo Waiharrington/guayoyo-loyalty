@@ -57,9 +57,8 @@ function LandingContent() {
             className="flex flex-col items-center space-y-8 w-full"
           >
             <div className="relative">
-              <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
-              <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
-              <div className="relative z-10 w-32 h-32">
+              <div className="absolute -inset-4 bg-emerald-500/20 blur-3xl rounded-full" />
+              <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32">
                 <Image
                   src="/logo.png"
                   alt="Guayoyo Logo"

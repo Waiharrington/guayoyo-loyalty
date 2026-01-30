@@ -1,15 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/app/lib/utils";
 
-interface CardProps {
+interface CardProps extends HTMLMotionProps<"div"> {
     children: React.ReactNode;
     className?: string;
     gradient?: boolean;
 }
 
-export function Card({ children, className, gradient = false }: CardProps) {
+export function Card({ children, className, gradient = false, ...props }: CardProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -22,6 +22,7 @@ export function Card({ children, className, gradient = false }: CardProps) {
                 "glass-card",
                 className
             )}
+            {...props}
         >
             {/* Subtle shine effect */}
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity pointer-events-none" />

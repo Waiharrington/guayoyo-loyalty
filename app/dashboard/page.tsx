@@ -132,9 +132,15 @@ function DashboardContent() {
                                 exit={{ opacity: 0, scale: 0.9, rotateX: -10 }}
                                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                             >
-                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-500 shadow-amber-500/40 border border-white/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-5`}>
+                                <Card
+                                    className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between shadow-2xl rounded-2xl p-5 ${level.isVip ? 'shadow-yellow-500/50' : 'bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-black/50'}`}
+                                    style={level.isVip ? {
+                                        background: 'linear-gradient(135deg, #FDB931 0%, #FFD700 50%, #FDB931 100%)',
+                                        color: 'black'
+                                    } : {}}
+                                >
                                     {/* Texture / Noise */}
-                                    <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
+                                    <div className={`absolute inset-0 opacity-30 bg-noise pointer-events-none ${level.isVip ? 'invert opacity-10' : ''}`} />
 
                                     {/* Visual Progress Overlay (Locked Sections) */}
                                     <div className="absolute inset-0 z-20 flex w-full h-full pointer-events-none rounded-2xl overflow-hidden">
