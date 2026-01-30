@@ -75,28 +75,26 @@ function DashboardContent() {
     const [isScanning, setIsScanning] = useState(false);
 
     useEffect(() => {
-        let scanner: any;
+        let html5QrCode: any;
         if (isScanning && user) {
-            import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
+            import("html5-qrcode").then(({ Html5Qrcode }) => {
                 if (!isScanning) return;
 
-                scanner = new Html5QrcodeScanner(
-                    "reader",
-                    {
-                        fps: 20, // Increased from 10 to 20 for faster feedback
-                        qrbox: { width: 250, height: 250 },
-                        videoConstraints: {
-                            facingMode: { exact: "environment" } // Force back camera
-                        }
-                    },
-                    /* verbose= */ false
-                );
+                html5QrCode = new Html5Qrcode("reader");
 
-                scanner.render(
+                const config = { fps: 20, qrbox: { width: 250, height: 250 } };
+
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
                     (decodedText: string) => {
                         if (decodedText === "GUAYOYO_SECRET_V1") {
-                            scanner.clear();
-                            setIsScanning(false);
+                            // Stop scanning
+                            html5QrCode.stop().then(() => {
+                                html5QrCode.clear();
+                                setIsScanning(false);
+                            }).catch((err: any) => console.error(err));
+
                             addVisit();
 
                             // Confetti check
@@ -123,19 +121,19 @@ function DashboardContent() {
                             console.warn("Invalid QR", decodedText);
                         }
                     },
-                    (error: any) => {
-                        // console.warn(error);
+                    (errorMessage: any) => {
+                        // console.log(errorMessage);
                     }
-                );
+                ).catch((err: any) => {
+                    console.error("Error starting scanner", err);
+                    setIsScanning(false);
+                });
+
             }).catch(console.error);
 
             return () => {
-                if (scanner) {
-                    try {
-                        scanner.clear().catch(console.error);
-                    } catch (e) {
-                        console.error("Error clearing scanner", e);
-                    }
+                if (html5QrCode?.isScanning) {
+                    html5QrCode.stop().then(() => html5QrCode.clear()).catch(console.error);
                 }
             };
         }
@@ -190,21 +188,23 @@ function DashboardContent() {
                         transition={{ type: "spring", stiffness: 260, damping: 20 }}
                     >
                         <Card
-                            className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between shadow-2xl rounded-2xl p-5 ${level.isVip ? 'shadow-yellow-500/50' : 'bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-black/50'}`}
-                            style={level.isVip ? {
-                                background: 'linear-gradient(135deg, #FDB931 0%, #FFD700 50%, #FDB931 100%)',
+                            className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between shadow-2xl rounded-2xl p-5 ${level.isVip ? 'shadow-yellow-500/50' : 'shadow-gray-400/50'}`}
+                            style={{
+                                background: level.isVip
+                                    ? 'linear-gradient(135deg, #FDB931 0%, #FFD700 50%, #FDB931 100%)'
+                                    : 'linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 40%, #c0c0c0 100%)', // Silver Metallic / Platinum
                                 color: 'black'
-                            } : {}}
+                            }}
                         >
                             {/* Texture / Noise */}
-                            <div className={`absolute inset-0 opacity-30 bg-noise pointer-events-none ${level.isVip ? 'invert opacity-10' : ''}`} />
+                            <div className={`absolute inset-0 opacity-20 bg-noise pointer-events-none ${level.isVip ? 'invert opacity-10' : ''}`} />
 
                             {/* Visual Progress Overlay (Locked Sections) */}
                             <div className="absolute inset-0 z-20 flex w-full h-full pointer-events-none rounded-2xl overflow-hidden">
                                 {Array.from({ length: required }).map((_, i) => (
                                     <div
                                         key={i}
-                                        className={`flex-1 border-r border-white/5 last:border-r-0 transition-all duration-500 ${i < progress ? 'bg-transparent' : 'bg-black/60 function-grayscale backdrop-blur-[0.5px]'
+                                        className={`flex-1 border-r border-black/10 last:border-r-0 transition-all duration-500 ${i < progress ? 'bg-transparent' : 'bg-black/50 backdrop-grayscale'
                                             }`}
                                     />
                                 ))}
@@ -213,16 +213,16 @@ function DashboardContent() {
                             {/* Top Row: Brand & Level */}
                             <div className="relative z-10 flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
-                                        <span className="font-bold font-serif italic text-white text-xs">G</span>
+                                    <div className="w-6 h-6 rounded-full bg-black/10 flex items-center justify-center backdrop-blur-md border border-black/10">
+                                        <span className="font-bold font-serif italic text-black/80 text-xs">G</span>
                                     </div>
-                                    <span className="font-semibold tracking-wider text-white/90 text-sm">Guayoyo</span>
+                                    <span className="font-semibold tracking-wider text-black/80 text-sm">Guayoyo</span>
                                 </div>
                                 <div className="text-right">
-                                    <span className="block text-[0.4rem] uppercase tracking-widest opacity-70">
+                                    <span className="block text-[0.4rem] uppercase tracking-widest opacity-60 text-black">
                                         {level.isVip ? 'ESTATUS' : 'NIVEL'}
                                     </span>
-                                    <span className={`font-bold italic text-xs ${level.isVip ? 'text-black' : 'text-lime-400'}`}>
+                                    <span className={`font-bold italic text-xs ${level.isVip ? 'text-black' : 'text-emerald-700'}`}>
                                         {level.name}
                                     </span>
                                 </div>
@@ -234,29 +234,29 @@ function DashboardContent() {
                                     <p className="font-black text-2xl italic tracking-tighter text-black/10 absolute top-0.5 left-0.5 w-full">
                                         10% OFF
                                     </p>
-                                    <p className="font-black text-2xl italic tracking-tighter text-white drop-shadow-md">
+                                    <p className="font-black text-2xl italic tracking-tighter text-black drop-shadow-sm">
                                         10% OFF
                                     </p>
                                 </div>
                             )}
 
                             {/* Chip & Signal & Progress Text */}
-                            <div className="relative z-10 flex items-center justify-between mt-1">
+                            <div className="relative z-10 flex items-center gap-2 mt-1">
                                 <div className="flex items-center gap-2">
                                     <div className="w-9 h-7 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
-                                    <div className="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center">
-                                        <div className="w-3 h-3 rounded-full border border-white/30" />
+                                    <div className="w-5 h-5 rounded-full border border-black/20 flex items-center justify-center">
+                                        <div className="w-3 h-3 rounded-full border border-black/20" />
                                     </div>
                                 </div>
-                                {/* Visit Count moved here to avoid overlap at bottom */}
-                                <div className="text-[0.5rem] text-white/50 font-mono tracking-widest">
+                                {/* Visit Count */}
+                                <div className="text-[0.5rem] text-black/60 font-mono tracking-widest font-semibold">
                                     {progress}/{required} VISITAS
                                 </div>
                             </div>
 
                             {/* Card Number (Cedula) */}
                             <div className="relative z-10 mt-auto mb-2">
-                                <p className="font-mono text-lg sm:text-xl tracking-widest text-white shadow-black drop-shadow-md">
+                                <p className="font-mono text-lg sm:text-xl tracking-widest text-black/90 shadow-white drop-shadow-sm">
                                     {user.cedula}
                                 </p>
                             </div>
@@ -264,19 +264,19 @@ function DashboardContent() {
                             {/* Bottom Row: Details */}
                             <div className="relative z-10 flex justify-between items-end">
                                 <div className="flex flex-col">
-                                    <span className="text-[0.4rem] uppercase tracking-widest opacity-60">NOMBRE</span>
-                                    <span className="font-medium tracking-wide uppercase truncate max-w-[120px] text-[0.65rem] sm:text-xs">{user.name}</span>
+                                    <span className="text-[0.4rem] uppercase tracking-widest opacity-60 text-black">NOMBRE</span>
+                                    <span className="font-medium tracking-wide uppercase truncate max-w-[120px] text-[0.65rem] sm:text-xs text-black/90">{user.name}</span>
                                 </div>
                                 <div className="flex flex-col items-end">
-                                    <span className="text-[0.4rem] uppercase tracking-widest opacity-60">VENCE</span>
-                                    <span className="font-medium tracking-wide font-mono text-[0.65rem] sm:text-xs">
+                                    <span className="text-[0.4rem] uppercase tracking-widest opacity-60 text-black">VENCE</span>
+                                    <span className="font-medium tracking-wide font-mono text-[0.65rem] sm:text-xs text-black/90">
                                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { month: '2-digit', year: '2-digit' }) : '12/99'}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Progress Strip (Subtle) */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10">
                                 <div
                                     className={`h-full bg-gradient-to-r ${level.color}`}
                                     style={{ width: `${percent}%` }}
@@ -450,20 +450,73 @@ function DashboardContent() {
 
             {/* Scanner Overlay */}
             {isScanning && (
-                <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-4">
+                <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center">
+                    {/* CSS for Scan Animation */}
+                    <style jsx global>{`
+                        @keyframes scan-line {
+                            0% { top: 0%; opacity: 0; }
+                            10% { opacity: 1; }
+                            90% { opacity: 1; }
+                            100% { top: 100%; opacity: 0; }
+                        }
+                        .animate-scan {
+                            animation: scan-line 2s linear infinite;
+                        }
+                    `}</style>
+
                     <Button
                         variant="ghost"
-                        className="absolute top-4 right-4 text-white z-50"
+                        className="absolute top-4 right-4 text-white z-50 rounded-full bg-black/20 backdrop-blur-md"
                         onClick={() => setIsScanning(false)}
                     >
                         <LogOut className="w-6 h-6" />
                     </Button>
-                    <div className="w-full max-w-md bg-white rounded-xl overflow-hidden relative">
-                        <div id="reader" className="w-full h-full" />
+
+                    <div className="relative w-full h-full bg-black">
+                        <div id="reader" className="w-full h-full object-cover" />
+
+                        {/* Overlay with "Cutout" effect using borders */}
+                        <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center">
+                            {/* Dark Background Mask */}
+                            <div className="absolute inset-0 bg-black/60 z-0" />
+
+                            {/* Clear Center Area */}
+                            <div className="relative z-10 w-72 h-72 sm:w-80 sm:h-80 bg-transparent box-content border-0">
+                                {/* The "Hole" uses a massive shadow to create the mask effect effectively if mask-image isn't used, 
+                                    but simpler approach is just relative z-index or the borders method above.
+                                    Actually, the simplest reliable way for a cutout is a hard transparent border or generic absolute divs.
+                                    Let's stick to the styling requested: "Green Frame".
+                                */}
+
+                                {/* We fake the cutout by relying on the fact that the transparent div sits on top of the darkened bg? 
+                                    No, a standard semi-transparent div covers everything. 
+                                    To get a "hole", we usually use a border widely, or SVG mask. 
+                                    Let's use a simpler "Frame only" on top of a lighter dark bg, or a clip-path.
+                                    
+                                    User Reference: Black BG with a SQUARE VIEWPORT.
+                                    Implementation: 
+                                    Full screen video.
+                                    Overlay Div with: border-[100vmax] border-black/60.
+                                */}
+                                <div className="absolute -inset-[100vmax] border-[100vmax] border-black/60 pointer-events-none" />
+
+                                {/* Green Corners / Frame */}
+                                <div className="absolute inset-0 border-2 border-emerald-500/50 rounded-3xl overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#34d399] animate-scan" />
+                                </div>
+
+                                {/* Decorative Corners */}
+                                <div className="absolute -top-1 -left-1 w-12 h-12 border-t-[6px] border-l-[6px] border-emerald-500 rounded-tl-3xl z-20" />
+                                <div className="absolute -top-1 -right-1 w-12 h-12 border-t-[6px] border-r-[6px] border-emerald-500 rounded-tr-3xl z-20" />
+                                <div className="absolute -bottom-1 -left-1 w-12 h-12 border-b-[6px] border-l-[6px] border-emerald-500 rounded-bl-3xl z-20" />
+                                <div className="absolute -bottom-1 -right-1 w-12 h-12 border-b-[6px] border-r-[6px] border-emerald-500 rounded-br-3xl z-20" />
+                            </div>
+
+                            <p className="relative z-20 text-white mt-12 font-medium bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
+                                Apunta la cámara al código QR
+                            </p>
+                        </div>
                     </div>
-                    <p className="text-white mt-4 text-sm text-center">
-                        Escanea el código QR proporcionado por el cajero
-                    </p>
                 </div>
             )}
         </div>
