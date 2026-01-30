@@ -132,41 +132,41 @@ function DashboardContent() {
                                 exit={{ opacity: 0, scale: 0.9, rotateX: -10 }}
                                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                             >
-                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-6`}>
+                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-5`}>
                                     {/* Texture / Noise */}
                                     <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
 
                                     {/* Top Row: Brand & Level */}
                                     <div className="relative z-10 flex justify-between items-center">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
-                                                <span className="font-bold font-serif italic text-white">G</span>
+                                            <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
+                                                <span className="font-bold font-serif italic text-white text-xs">G</span>
                                             </div>
-                                            <span className="font-semibold tracking-wider text-white/90">Guayoyo</span>
+                                            <span className="font-semibold tracking-wider text-white/90 text-sm">Guayoyo</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="block text-[0.5rem] uppercase tracking-widest opacity-70">NIVEL</span>
-                                            <span className={`font-bold italic text-sm ${level.isVip ? 'text-white' : 'text-lime-400'}`}>{level.name}</span>
+                                            <span className="block text-[0.4rem] uppercase tracking-widest opacity-70">NIVEL</span>
+                                            <span className={`font-bold italic text-xs ${level.isVip ? 'text-white' : 'text-lime-400'}`}>{level.name}</span>
                                         </div>
                                     </div>
 
                                     {/* Chip & Signal & Progress Text */}
-                                    <div className="relative z-10 flex items-center justify-between mt-1 sm:mt-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-7 sm:w-12 sm:h-9 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
-                                            <div className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
-                                                <div className="w-4 h-4 rounded-full border border-white/30" />
+                                    <div className="relative z-10 flex items-center justify-between mt-1">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-9 h-7 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
+                                            <div className="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center">
+                                                <div className="w-3 h-3 rounded-full border border-white/30" />
                                             </div>
                                         </div>
                                         {/* Visit Count moved here to avoid overlap at bottom */}
-                                        <div className="text-[0.6rem] text-white/50 font-mono tracking-widest">
+                                        <div className="text-[0.5rem] text-white/50 font-mono tracking-widest">
                                             {progress}/{required} VISITAS
                                         </div>
                                     </div>
 
                                     {/* Card Number (Cedula) */}
-                                    <div className="relative z-10 mt-auto mb-2 sm:mb-4">
-                                        <p className="font-mono text-xl sm:text-2xl tracking-widest text-white shadow-black drop-shadow-md">
+                                    <div className="relative z-10 mt-auto mb-2">
+                                        <p className="font-mono text-lg sm:text-xl tracking-widest text-white shadow-black drop-shadow-md">
                                             {user.cedula}
                                         </p>
                                     </div>
@@ -174,12 +174,12 @@ function DashboardContent() {
                                     {/* Bottom Row: Details */}
                                     <div className="relative z-10 flex justify-between items-end">
                                         <div className="flex flex-col">
-                                            <span className="text-[0.5rem] uppercase tracking-widest opacity-60">NOMBRE</span>
-                                            <span className="font-medium tracking-wide uppercase truncate max-w-[150px] text-xs sm:text-sm">{user.name}</span>
+                                            <span className="text-[0.4rem] uppercase tracking-widest opacity-60">NOMBRE</span>
+                                            <span className="font-medium tracking-wide uppercase truncate max-w-[120px] text-[0.65rem] sm:text-xs">{user.name}</span>
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[0.5rem] uppercase tracking-widest opacity-60">VENCE</span>
-                                            <span className="font-medium tracking-wide font-mono text-xs sm:text-sm">
+                                            <span className="text-[0.4rem] uppercase tracking-widest opacity-60">VENCE</span>
+                                            <span className="font-medium tracking-wide font-mono text-[0.65rem] sm:text-xs">
                                                 {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { month: '2-digit', year: '2-digit' }) : '12/99'}
                                             </span>
                                         </div>
