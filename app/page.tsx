@@ -90,7 +90,7 @@ function LandingContent() {
                 variant="outline"
                 size="lg"
                 onClick={() => setView("login")}
-                className="w-full"
+                className="w-full border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400"
               >
                 Ya tengo cuenta
               </Button>
@@ -106,9 +106,9 @@ function LandingContent() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full"
           >
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 border-emerald-500/20">
               <div className="flex flex-col items-center mb-6">
-                <KeyRound className="w-12 h-12 text-primary mb-4" />
+                <KeyRound className="w-12 h-12 text-emerald-500 mb-4" />
                 <h2 className="text-2xl font-bold">Bienvenido de nuevo</h2>
                 <p className="text-zinc-400 text-sm mt-1">Ingresa tu cédula para ver tus beneficios</p>
               </div>
@@ -120,17 +120,18 @@ function LandingContent() {
                     placeholder="Ej. 12345678"
                     value={cedula}
                     onChange={(e) => setCedula(e.target.value)}
+                    className="focus-visible:ring-emerald-500 text-white placeholder:text-zinc-600"
                   />
                 </div>
 
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
-                <Button type="submit" className="w-full mt-4">
+                <Button type="submit" className="w-full mt-4 text-white font-semibold shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none transition-all">
                   Ingresar
                 </Button>
 
                 <p
-                  className="text-xs text-zinc-500 mt-4 cursor-pointer hover:text-primary transition-colors"
+                  className="text-xs text-zinc-500 mt-4 cursor-pointer hover:text-emerald-400 transition-colors"
                   onClick={() => { setView("welcome"); setError(""); }}
                 >
                   Volver al inicio
@@ -148,9 +149,9 @@ function LandingContent() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full"
           >
-            <Card className="glass-card p-8">
+            <Card className="glass-card p-8 border-emerald-500/20">
               <div className="flex flex-col items-center mb-6">
-                <User className="w-12 h-12 text-primary mb-4" />
+                <User className="w-12 h-12 text-emerald-500 mb-4" />
                 <h2 className="text-2xl font-bold">Crear Cuenta</h2>
                 <p className="text-zinc-400 text-sm mt-1">Únete a nuestro club exclusivo</p>
               </div>
@@ -162,7 +163,7 @@ function LandingContent() {
                     placeholder="Ej. 12345678"
                     value={cedula}
                     onChange={(e) => setCedula(e.target.value)}
-                    className="text-white placeholder:text-zinc-600"
+                    className="focus-visible:ring-emerald-500 text-white placeholder:text-zinc-600"
                   />
                 </div>
                 <div className="space-y-2 text-left">
@@ -171,7 +172,7 @@ function LandingContent() {
                     placeholder="Tu nombre"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="text-white placeholder:text-zinc-600"
+                    className="focus-visible:ring-emerald-500 text-white placeholder:text-zinc-600"
                   />
                 </div>
                 <div className="space-y-2 text-left">
@@ -180,7 +181,7 @@ function LandingContent() {
                     placeholder="+507 ..."
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="text-white placeholder:text-zinc-600"
+                    className="focus-visible:ring-emerald-500 text-white placeholder:text-zinc-600"
                   />
                 </div>
 
@@ -191,7 +192,7 @@ function LandingContent() {
                 </Button>
 
                 <p
-                  className="text-xs text-zinc-500 mt-4 cursor-pointer hover:text-primary transition-colors"
+                  className="text-xs text-zinc-500 mt-4 cursor-pointer hover:text-emerald-400 transition-colors"
                   onClick={() => { setView("welcome"); setError(""); }}
                 >
                   Volver al inicio
