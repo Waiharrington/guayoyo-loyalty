@@ -132,7 +132,7 @@ function DashboardContent() {
                                 exit={{ opacity: 0, scale: 0.9, rotateX: -10 }}
                                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                             >
-                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-5`}>
+                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-500 shadow-amber-500/40 border border-white/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-5`}>
                                     {/* Texture / Noise */}
                                     <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
 
@@ -156,10 +156,26 @@ function DashboardContent() {
                                             <span className="font-semibold tracking-wider text-white/90 text-sm">Guayoyo</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="block text-[0.4rem] uppercase tracking-widest opacity-70">NIVEL</span>
-                                            <span className={`font-bold italic text-xs ${level.isVip ? 'text-white' : 'text-lime-400'}`}>{level.name}</span>
+                                            <span className="block text-[0.4rem] uppercase tracking-widest opacity-70">
+                                                {level.isVip ? 'ESTATUS' : 'NIVEL'}
+                                            </span>
+                                            <span className={`font-bold italic text-xs ${level.isVip ? 'text-black' : 'text-lime-400'}`}>
+                                                {level.name}
+                                            </span>
                                         </div>
                                     </div>
+
+                                    {/* VIP Prize Highlight */}
+                                    {level.isVip && (
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-10">
+                                            <p className="font-black text-2xl italic tracking-tighter text-black/10 absolute top-0.5 left-0.5 w-full">
+                                                10% OFF
+                                            </p>
+                                            <p className="font-black text-2xl italic tracking-tighter text-white drop-shadow-md">
+                                                10% OFF
+                                            </p>
+                                        </div>
+                                    )}
 
                                     {/* Chip & Signal & Progress Text */}
                                     <div className="relative z-10 flex items-center justify-between mt-1">
