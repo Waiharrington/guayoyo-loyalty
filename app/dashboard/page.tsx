@@ -245,15 +245,41 @@ function DashboardContent() {
                             )}
 
                             <div className="flex flex-col items-center gap-2 w-full">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-1 ${isCompleted && !isRedeemed ? 'bg-lime-500/20 text-lime-500' : 'bg-zinc-800 text-zinc-600'}`}>
-                                    {isRedeemed ? <CheckCircle2 className="w-6 h-6" /> : (isCompleted ? <Gift className="w-6 h-6 animate-pulse" /> : <span className="font-bold text-lg">{index + 1}</span>)}
+                                {/* Mini Credit Card Replica */}
+                                <div className={`relative w-full aspect-[1.586/1] rounded-lg overflow-hidden flex flex-col justify-between p-3 mb-1 shadow-lg
+                                    ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'}
+                                `}>
+                                    {/* Noise */}
+                                    <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
+
+                                    {/* Top Row */}
+                                    <div className="relative z-10 flex justify-between items-start">
+                                        <div className="flex items-center gap-1">
+                                            <div className="w-3 h-3 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
+                                                <span className="font-bold font-serif italic text-white text-[0.4rem]">G</span>
+                                            </div>
+                                            <span className="font-semibold tracking-wider text-white/90 text-[0.4rem]">Guayoyo</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Middle: Reward Text as "Name" */}
+                                    <div className="relative z-10 mt-1">
+                                        <p className={`font-mono text-[0.55rem] tracking-wider uppercase leading-tight ${isCompleted || isRedeemed ? 'text-white' : 'text-zinc-500 blur-[1px]'}`}>
+                                            {isCompleted || isRedeemed ? level.prize : "Premio\nSorpresa"}
+                                        </p>
+                                    </div>
+
+                                    {/* Bottom Row */}
+                                    <div className="relative z-10 flex justify-between items-end mt-auto">
+                                        <div className="flex flex-col">
+                                            <span className="text-[0.3rem] uppercase tracking-widest opacity-60 text-white">RECOMPENSA</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <div className="w-4 h-3 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="w-full">
-                                    <p className={`font-medium text-sm leading-tight mb-1 transition-all duration-300 ${isCompleted || isRedeemed ? 'text-white' : 'text-zinc-500 blur-[2px] select-none'}`}>
-                                        {isCompleted || isRedeemed ? level.prize : "Premio\nSorpresa"}
-                                    </p>
-                                    <p className="text-[0.65rem] uppercase tracking-wider text-zinc-500">{level.name}</p>
-                                </div>
+                                <p className="text-[0.65rem] uppercase tracking-wider text-zinc-500">{level.name}</p>
                             </div>
 
                             <div className="w-full mt-auto pt-2">
