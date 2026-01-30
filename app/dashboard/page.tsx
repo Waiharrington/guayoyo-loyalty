@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
@@ -47,10 +47,8 @@ function DashboardContent() {
         return () => clearTimeout(timer);
     }, [user, router]);
 
-    if (!user) return null;
-
     // Logic for Progress
-    const currentVisits = user.visits || 0;
+    const currentVisits = user?.visits || 0;
 
     const getLevelStatus = (levelIndex: number) => {
         let visitsBefore = 0;
@@ -74,20 +72,18 @@ function DashboardContent() {
         confetti(opts);
     };
 
-    /* 
-    // SCANNER LOGIC DISABLED FOR DEBUGGING
     const [isScanning, setIsScanning] = useState(false);
 
     useEffect(() => {
         let scanner: any;
-        if (isScanning) {
+        if (isScanning && user) {
             import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
                 if (!isScanning) return;
-                
+
                 scanner = new Html5QrcodeScanner(
                     "reader",
                     { fps: 10, qrbox: { width: 250, height: 250 } },
-                     false
+                    /* verbose= */ false
                 );
 
                 scanner.render(
@@ -96,25 +92,54 @@ function DashboardContent() {
                             scanner.clear();
                             setIsScanning(false);
                             addVisit();
-                            // ... confetti logic ...
+
+                            // Confetti check
+                            let accumulated = 0;
+                            const newVisits = (user?.visits || 0) + 1;
+                            for (const level of LEVELS) {
+                                accumulated += level.visitsRequired;
+                                if (newVisits === accumulated) {
+                                    runConfetti({
+                                        particleCount: 150,
+                                        spread: 70,
+                                        origin: { y: 0.6 }
+                                    });
+                                    break;
+                                }
+                            }
+                            // Always small confetti for success
+                            runConfetti({
+                                particleCount: 50,
+                                spread: 40,
+                                origin: { y: 0.7 }
+                            });
+                        } else {
+                            console.warn("Invalid QR", decodedText);
                         }
                     },
-                    (error: any) => {}
+                    (error: any) => {
+                        // console.warn(error);
+                    }
                 );
             }).catch(console.error);
 
             return () => {
-                if (scanner) scanner.clear().catch(console.error);
+                if (scanner) {
+                    try {
+                        scanner.clear().catch(console.error);
+                    } catch (e) {
+                        console.error("Error clearing scanner", e);
+                    }
+                }
             };
         }
-    }, [isScanning, addVisit, user.visits]);
-    */
+    }, [isScanning, addVisit, user]);
 
     const handleScan = () => {
-        // TEMPORARY: Just verify scanning button doesn't crash
-        // setIsScanning(true);
-        alert("Escáner deshabilitado temporalmente por mantenimiento.");
+        setIsScanning(true);
     };
+
+    if (!user) return null;
 
     const activeLevelIndex = LEVELS.findIndex((l, idx) => !getLevelStatus(idx).isCompleted);
     const isAllCompleted = activeLevelIndex === -1;
@@ -417,7 +442,24 @@ function DashboardContent() {
                 )}
             </AnimatePresence>
 
-            {/* SCANNER OVERLAY DISABLED */}
+            {/* Scanner Overlay */}
+            {isScanning && (
+                <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-4">
+                    <Button
+                        variant="ghost"
+                        className="absolute top-4 right-4 text-white z-50"
+                        onClick={() => setIsScanning(false)}
+                    >
+                        <LogOut className="w-6 h-6" />
+                    </Button>
+                    <div className="w-full max-w-md bg-white rounded-xl overflow-hidden relative">
+                        <div id="reader" className="w-full h-full" />
+                    </div>
+                    <p className="text-white mt-4 text-sm text-center">
+                        Escanea el código QR proporcionado por el cajero
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
