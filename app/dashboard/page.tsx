@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { QrCode, Gift, Lock, LogOut, Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 // Levels Configuration
 const LEVELS = [
@@ -84,27 +85,63 @@ function DashboardContent() {
         return { isCompleted, progress, required, isUnlocked };
     };
 
-    const handleScan = () => {
-        // Simulation of scanning QR
-        addVisit();
+    const [isScanning, setIsScanning] = useState(false);
 
-        // Check if just completed a level for confetti
-        // This is a naive check; ideally we check state diff, but for MVP:
-        // We can just blast confetti every time needed or let the user see the progress fill.
-        // Let's blast confetti if we hit a milestone.
-        let accumulated = 0;
-        const newVisits = user.visits + 1;
-        for (const level of LEVELS) {
-            accumulated += level.visitsRequired;
-            if (newVisits === accumulated) {
-                confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-                break;
-            }
+    useEffect(() => {
+        if (isScanning) {
+            const scanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                /* verbose= */ false
+            );
+
+            scanner.render(
+                (decodedText) => {
+                    if (decodedText === "GUAYOYO_SECRET_V1") {
+                        scanner.clear();
+                        setIsScanning(false);
+                        addVisit();
+
+                        // Confetti check
+                        // We check against (current + 1) because addVisit state update might be async/batched
+                        let accumulated = 0;
+                        const newVisits = user.visits + 1;
+                        for (const level of LEVELS) {
+                            accumulated += level.visitsRequired;
+                            if (newVisits === accumulated) {
+                                confetti({
+                                    particleCount: 150,
+                                    spread: 70,
+                                    origin: { y: 0.6 }
+                                });
+                                break;
+                            }
+                        }
+                        // Always small confetti for success
+                        confetti({
+                            particleCount: 50,
+                            spread: 40,
+                            origin: { y: 0.7 }
+                        });
+                    } else {
+                        // Handle invalid code? For now just ignore or alert
+                        // alert("Código inválido");
+                        console.warn("Invalid QR", decodedText);
+                    }
+                },
+                (error) => {
+                    // console.warn(error);
+                }
+            );
+
+            return () => {
+                scanner.clear().catch(console.error);
+            };
         }
+    }, [isScanning, addVisit, user.visits]);
+
+    const handleScan = () => {
+        setIsScanning(true);
     };
 
     const activeLevelIndex = LEVELS.findIndex((l, idx) => !getLevelStatus(idx).isCompleted);
@@ -408,6 +445,25 @@ function DashboardContent() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Scanner Overlay */}
+            {isScanning && (
+                <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-4">
+                    <Button
+                        variant="ghost"
+                        className="absolute top-4 right-4 text-white z-50"
+                        onClick={() => setIsScanning(false)}
+                    >
+                        <LogOut className="w-6 h-6" />
+                    </Button>
+                    <div className="w-full max-w-md bg-white rounded-xl overflow-hidden relative">
+                        <div id="reader" className="w-full h-full" />
+                    </div>
+                    <p className="text-white mt-4 text-sm text-center">
+                        Escanea el código QR proporcionado por el cajero
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
