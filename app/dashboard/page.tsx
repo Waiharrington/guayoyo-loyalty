@@ -11,10 +11,10 @@ import { useRouter } from "next/navigation";
 
 // Levels Configuration
 const LEVELS = [
-    { id: 1, name: "Nivel Inicial", visitsRequired: 3, prize: "Café Gratis", color: "from-amber-400 to-orange-500" },
-    { id: 2, name: "Nivel Intermedio", visitsRequired: 5, prize: "Desayuno ($6)", color: "from-orange-500 to-red-500" },
-    { id: 3, name: "Nivel Avanzado", visitsRequired: 8, prize: "Desayuno Premium", color: "from-red-500 to-purple-600" },
-    { id: 4, name: "Socio VIP", visitsRequired: 10, prize: "10% Descuento Vitalicio", color: "from-purple-600 to-indigo-600", isVip: true },
+    { id: 1, name: "Nivel Inicial", visitsRequired: 3, prize: "Café Gratis", color: "from-lime-300 to-green-400" },
+    { id: 2, name: "Nivel Intermedio", visitsRequired: 5, prize: "Desayuno ($6)", color: "from-green-400 to-emerald-500" },
+    { id: 3, name: "Nivel Avanzado", visitsRequired: 8, prize: "Desayuno Premium", color: "from-emerald-500 to-teal-600" },
+    { id: 4, name: "Socio VIP", visitsRequired: 10, prize: "10% Descuento Vitalicio", color: "from-teal-600 to-cyan-600", isVip: true },
 ];
 
 export default function DashboardPage() {
@@ -132,12 +132,12 @@ function DashboardContent() {
                                 exit={{ opacity: 0, scale: 0.9, rotateX: -10 }}
                                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
                             >
-                                <Card className={`relative overflow-hidden border-0 h-56 flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-6`}>
+                                <Card className={`relative overflow-hidden border-0 w-full aspect-[1.586/1] h-auto flex flex-col justify-between ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 shadow-yellow-500/20' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'} shadow-2xl rounded-2xl p-6`}>
                                     {/* Texture / Noise */}
                                     <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
 
                                     {/* Top Row: Brand & Level */}
-                                    <div className="relative z-10 flex justify-between items-center mb-6">
+                                    <div className="relative z-10 flex justify-between items-center">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
                                                 <span className="font-bold font-serif italic text-white">G</span>
@@ -145,37 +145,41 @@ function DashboardContent() {
                                             <span className="font-semibold tracking-wider text-white/90">Guayoyo</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="block text-xs uppercase tracking-widest opacity-70">NIVEL</span>
-                                            <span className={`font-bold italic ${level.isVip ? 'text-white' : 'text-amber-500'}`}>{level.name}</span>
+                                            <span className="block text-[0.5rem] uppercase tracking-widest opacity-70">NIVEL</span>
+                                            <span className={`font-bold italic text-sm ${level.isVip ? 'text-white' : 'text-lime-400'}`}>{level.name}</span>
                                         </div>
                                     </div>
 
-                                    {/* Chip & Signal */}
-                                    <div className="relative z-10 flex items-center gap-4 mb-4">
-                                        <div className="w-12 h-9 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
-                                        <div className="flex flex-col gap-1">
+                                    {/* Chip & Signal & Progress Text */}
+                                    <div className="relative z-10 flex items-center justify-between mt-1 sm:mt-2">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-7 sm:w-12 sm:h-9 rounded bg-gradient-to-tr from-yellow-200 to-yellow-500 border border-yellow-600 shadow-inner opacity-90" />
                                             <div className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
                                                 <div className="w-4 h-4 rounded-full border border-white/30" />
                                             </div>
                                         </div>
+                                        {/* Visit Count moved here to avoid overlap at bottom */}
+                                        <div className="text-[0.6rem] text-white/50 font-mono tracking-widest">
+                                            {progress}/{required} VISITAS
+                                        </div>
                                     </div>
 
                                     {/* Card Number (Cedula) */}
-                                    <div className="relative z-10 mb-6">
-                                        <p className="font-mono text-xl sm:text-2xl tracking-[0.15em] text-white shadow-black drop-shadow-md">
-                                            {user.cedula.replace(/(\d{4})/g, '$1 ').trim()}
+                                    <div className="relative z-10 mt-auto mb-2 sm:mb-4">
+                                        <p className="font-mono text-xl sm:text-2xl tracking-widest text-white shadow-black drop-shadow-md">
+                                            {user.cedula}
                                         </p>
                                     </div>
 
                                     {/* Bottom Row: Details */}
                                     <div className="relative z-10 flex justify-between items-end">
                                         <div className="flex flex-col">
-                                            <span className="text-[0.6rem] uppercase tracking-widest opacity-60">NOMBRE</span>
-                                            <span className="font-medium tracking-wide uppercase truncate max-w-[150px]">{user.name}</span>
+                                            <span className="text-[0.5rem] uppercase tracking-widest opacity-60">NOMBRE</span>
+                                            <span className="font-medium tracking-wide uppercase truncate max-w-[150px] text-xs sm:text-sm">{user.name}</span>
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[0.6rem] uppercase tracking-widest opacity-60">VENCE</span>
-                                            <span className="font-medium tracking-wide font-mono">
+                                            <span className="text-[0.5rem] uppercase tracking-widest opacity-60">VENCE</span>
+                                            <span className="font-medium tracking-wide font-mono text-xs sm:text-sm">
                                                 {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { month: '2-digit', year: '2-digit' }) : '12/99'}
                                             </span>
                                         </div>
@@ -188,9 +192,6 @@ function DashboardContent() {
                                             style={{ width: `${percent}%` }}
                                         />
                                     </div>
-                                    <div className="absolute bottom-2 right-4 text-[0.6rem] text-white/40">
-                                        {progress} / {required} Visitas
-                                    </div>
                                 </Card>
                             </motion.div>
                         );
@@ -202,7 +203,7 @@ function DashboardContent() {
             <div className="flex flex-col gap-4 mb-8">
                 <Button
                     size="lg"
-                    className="w-full text-lg h-16 shadow-amber-500/20 shadow-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-0"
+                    className="w-full text-lg h-16 shadow-emerald-500/20 shadow-xl bg-gradient-to-r from-lime-500 to-emerald-600 hover:from-lime-400 hover:to-emerald-500 border-0"
                     onClick={handleScan}
                 >
                     <QrCode className="mr-2 w-6 h-6" />
@@ -227,11 +228,13 @@ function DashboardContent() {
                             )}
 
                             <div className="flex items-center gap-4">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCompleted ? 'bg-green-500/20 text-green-500' : 'bg-zinc-800'}`}>
-                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5" /> : (isCompleted ? <Gift className="w-5 h-5 animate-pulse" /> : <span className="font-bold text-zinc-500">{index + 1}</span>)}
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCompleted ? 'bg-lime-500/20 text-lime-500' : 'bg-zinc-800'}`}>
+                                    {isRedeemed ? <CheckCircle2 className="w-5 h-5" /> : (isCompleted ? <Gift className="w-5 h-5 animate-pulse" /> : <span className="font-bold text-zinc-600">{index + 1}</span>)}
                                 </div>
-                                <div>
-                                    <p className={`font-medium ${isCompleted ? 'text-white' : 'text-zinc-400'}`}>{level.prize}</p>
+                                <div className={`${!isUnlocked ? 'blur-sm select-none opacity-50' : ''} transition-all duration-300`}>
+                                    <p className={`font-medium ${isCompleted ? 'text-white' : 'text-zinc-400'}`}>
+                                        {isUnlocked ? level.prize : "Premio Sorpresa ????"}
+                                    </p>
                                     <p className="text-xs text-zinc-500">{level.name}</p>
                                 </div>
                             </div>
@@ -268,9 +271,9 @@ function DashboardContent() {
                             exit={{ scale: 0.9, y: 20 }}
                             className="w-full max-w-sm"
                         >
-                            <Card className="glass-card p-6 border-amber-500/30">
+                            <Card className="glass-card p-6 border-lime-500/30">
                                 <div className="flex flex-col items-center text-center">
-                                    <Gift className="w-16 h-16 text-amber-500 mb-4" />
+                                    <Gift className="w-16 h-16 text-lime-500 mb-4" />
                                     <h3 className="text-xl font-bold mb-2">¿Redimir Recompensa?</h3>
                                     <p className="text-zinc-400 text-sm mb-6">
                                         Muestra esta pantalla a tu mesero. Una vez redimido, no podrás volver a usar este premio.
@@ -280,7 +283,7 @@ function DashboardContent() {
                                             Cancelar
                                         </Button>
                                         <Button
-                                            className="bg-amber-500 hover:bg-amber-600 text-black border-none"
+                                            className="bg-lime-500 hover:bg-lime-600 text-black border-none"
                                             onClick={() => {
                                                 if (showRedeemModal.levelId) {
                                                     redeemPrize(showRedeemModal.levelId);
@@ -289,7 +292,7 @@ function DashboardContent() {
                                                         particleCount: 100,
                                                         spread: 70,
                                                         origin: { y: 0.6 },
-                                                        colors: ['#fbbf24', '#f59e0b', '#b45309']
+                                                        colors: ['#bef264', '#86efac', '#22c55e']
                                                     });
                                                 }
                                             }}

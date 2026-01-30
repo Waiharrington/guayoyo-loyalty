@@ -81,7 +81,7 @@ function LandingContent() {
               <Button
                 size="lg"
                 onClick={() => setView("register")}
-                className="w-full text-lg shadow-amber-500/20 shadow-xl text-white"
+                className="w-full text-lg shadow-emerald-500/20 shadow-xl text-white bg-gradient-to-r from-emerald-500 to-green-600 border-none"
               >
                 Registrarme
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -186,7 +186,7 @@ function LandingContent() {
 
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
-                <Button type="submit" className="w-full mt-4 text-white font-semibold shadow-lg shadow-amber-500/10">
+                <Button type="submit" className="w-full mt-4 text-white font-semibold shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 border-none transition-all">
                   Registrarme
                 </Button>
 
