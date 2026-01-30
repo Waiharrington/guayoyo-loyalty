@@ -5,7 +5,7 @@ import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
 import { Card } from "@/app/components/ui/Card";
 import { Button } from "@/app/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { QrCode, Gift, CheckCircle2, Lock, LogOut } from "lucide-react";
+import { QrCode, Gift, Lock, LogOut, Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
 
@@ -250,15 +250,29 @@ function DashboardContent() {
 
             {/* Action Area */}
             <div className="flex flex-col gap-4 mb-8">
-                <Button
-                    size="lg"
-                    className="w-full text-lg h-16 shadow-emerald-500/20 shadow-xl bg-gradient-to-r from-lime-500 to-emerald-600 hover:from-lime-400 hover:to-emerald-500 border-0"
-                    onClick={handleScan}
-                >
-                    <QrCode className="mr-2 w-6 h-6" />
-                    Escanear Código QR
-                </Button>
-                <p className="text-xs text-center text-zinc-500">Escanea el código en la mesa para registrar tu visita</p>
+                {activeLevelIndex === -1 ? (
+                    <div className="w-full p-6 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 flex flex-col items-center justify-center text-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-1">
+                            <Heart className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                        </div>
+                        <h3 className="font-bold text-yellow-500 text-lg">¡Eres un Socio VIP!</h3>
+                        <p className="text-zinc-400 text-sm">
+                            Gracias por tu fidelidad. Disfruta de tu <strong className="text-yellow-400">10% de descuento vitalicio</strong> en todas tus visitas.
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        <Button
+                            size="lg"
+                            className="w-full text-lg h-16 shadow-emerald-500/20 shadow-xl bg-gradient-to-r from-lime-500 to-emerald-600 hover:from-lime-400 hover:to-emerald-500 border-0"
+                            onClick={handleScan}
+                        >
+                            <QrCode className="mr-2 w-6 h-6" />
+                            Escanear Código QR
+                        </Button>
+                        <p className="text-xs text-center text-zinc-500">Escanea el código en la mesa para registrar tu visita</p>
+                    </>
+                )}
             </div>
 
             {/* Rewards / Levels List */}
