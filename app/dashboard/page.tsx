@@ -14,8 +14,17 @@ const LEVELS = [
     { id: 1, name: "Nivel Inicial", visitsRequired: 3, prize: "Café Gratis", color: "from-lime-300 to-green-400" },
     { id: 2, name: "Nivel Intermedio", visitsRequired: 5, prize: "Desayuno ($6)", color: "from-green-400 to-emerald-500" },
     { id: 3, name: "Nivel Avanzado", visitsRequired: 8, prize: "Desayuno Premium", color: "from-emerald-500 to-teal-600" },
-    { id: 4, name: "Socio VIP", visitsRequired: 10, prize: "10% Descuento Vitalicio", color: "from-teal-600 to-cyan-600", isVip: true },
+    { id: 4, name: "Nivel Experto", visitsRequired: 10, prize: "10 Cafés Gratis", color: "from-teal-600 to-cyan-600" },
 ];
+
+const VIP_CARD_DATA = {
+    id: 'vip',
+    name: "Socio VIP",
+    visitsRequired: 0,
+    prize: "10% OFF",
+    isVip: true,
+    color: "from-yellow-500 to-amber-500"
+};
 
 export default function DashboardPage() {
     return (
@@ -99,7 +108,7 @@ function DashboardContent() {
     };
 
     const activeLevelIndex = LEVELS.findIndex((l, idx) => !getLevelStatus(idx).isCompleted);
-    const currentLevelToDisplay = activeLevelIndex === -1 ? LEVELS.length - 1 : activeLevelIndex;
+
     // If all completed, show the VIP one as active/persistent
 
     return (
@@ -117,12 +126,19 @@ function DashboardContent() {
             {/* Main Active Card */}
             <div className="mb-8 relative z-10 perspective-1000">
                 <AnimatePresence mode="wait">
-                    {LEVELS.map((level, index) => {
-                        if (index !== currentLevelToDisplay && index !== LEVELS.length - 1) return null; // Show only active or VIP if done
-                        if (index !== currentLevelToDisplay) return null;
 
-                        const { progress, required } = getLevelStatus(index);
+                    {(() => {
+                        const activeLevelIndex = LEVELS.findIndex((l, idx) => !getLevelStatus(idx).isCompleted);
+                        const isAllCompleted = activeLevelIndex === -1;
+
+                        const levelToRender = isAllCompleted ? VIP_CARD_DATA : LEVELS[activeLevelIndex !== -1 ? activeLevelIndex : 0];
+                        const { progress, required } = isAllCompleted
+                            ? { progress: 1, required: 1 } // Full progress for VIP
+                            : getLevelStatus(activeLevelIndex !== -1 ? activeLevelIndex : 0);
+
                         const percent = (progress / required) * 100;
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const level = levelToRender as any;
 
                         return (
                             <motion.div
@@ -228,7 +244,7 @@ function DashboardContent() {
                                 </Card>
                             </motion.div>
                         );
-                    })}
+                    })()}
                 </AnimatePresence>
             </div>
 
@@ -269,7 +285,7 @@ function DashboardContent() {
                             <div className="flex flex-col items-center gap-2 w-full">
                                 {/* Mini Credit Card Replica */}
                                 <div className={`relative w-full aspect-[1.586/1] rounded-lg overflow-hidden flex flex-col justify-between p-3 mb-1 shadow-lg
-                                    ${level.isVip ? 'bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600' : 'bg-gradient-to-br from-zinc-800 to-zinc-950'}
+                                    bg-gradient-to-br from-zinc-800 to-zinc-950
                                 `}>
                                     {/* Noise */}
                                     <div className="absolute inset-0 opacity-30 bg-noise pointer-events-none" />
