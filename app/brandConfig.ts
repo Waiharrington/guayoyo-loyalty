@@ -1,15 +1,15 @@
 export const BRAND_CONFIG = {
-    name: "Guayoyo",
-    fullName: "Guayoyo Loyalty",
-    memberTitle: "Miembro Guayoyo",
-    secretCode: "GUAYOYO_SECRET_V1",
+    name: "La Parrilla del Este",
+    fullName: "La Parrilla del Este Loyalty",
+    memberTitle: "Miembro de la Casa",
+    secretCode: "PARRILLA_SECRET_V1",
     colors: {
-        primary: "#86efac", // green-300
-        gradient: "linear-gradient(135deg, #bef264 0%, #86efac 50%, #4ade80 100%)",
+        primary: "#f97316", // orange-500
+        gradient: "linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%)",
     },
     socials: {
-        instagram: "@guayoyopanamagolf",
-        website: "https://guayoyo.com.pa",
+        instagram: "@laparrilladeleste",
+        website: "https://laparrilladeleste.com",
     }
 };
 
