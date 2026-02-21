@@ -8,7 +8,7 @@ interface User {
     cedula: string;
     name: string;
     visits: number;
-    redeemedLevels: number[];
+    redeemedLevels: (string | number)[];
     createdAt?: string;
 }
 
@@ -17,7 +17,7 @@ interface LoyaltyContextType {
     login: (cedula: string) => Promise<boolean>;
     register: (cedula: string, name: string, phone: string) => Promise<void>;
     addVisit: () => Promise<void>;
-    redeemPrize: (levelId: number) => Promise<void>;
+    redeemPrize: (levelId: string | number) => Promise<void>;
     logout: () => void;
     isLoading: boolean;
 }
@@ -187,7 +187,7 @@ export function LoyaltyProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const redeemPrize = async (levelId: number) => {
+    const redeemPrize = async (levelId: string | number) => {
         if (!user) return;
         if (user.redeemedLevels.includes(levelId)) return;
 

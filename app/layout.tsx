@@ -12,9 +12,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import { BRAND_CONFIG } from "./brandConfig";
+
 export const metadata: Metadata = {
-  title: "Guayoyo Loyalty",
-  description: "Programa de fidelización exclusivo",
+  title: BRAND_CONFIG.fullName,
+  description: `Programa de fidelización exclusivo de ${BRAND_CONFIG.name}`,
 };
 
 export default function RootLayout({

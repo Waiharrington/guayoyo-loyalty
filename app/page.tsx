@@ -8,6 +8,7 @@ import { Card } from "@/app/components/ui/Card";
 import { ArrowRight, User, KeyRound } from "lucide-react";
 import Image from "next/image";
 import { useLoyalty, LoyaltyProvider } from "@/app/context/LoyaltyContext";
+import { BRAND_CONFIG } from "./brandConfig";
 
 
 // Wrap content in provider for the page
@@ -61,7 +62,7 @@ function LandingContent() {
               <div className="relative z-10 w-40 h-40 sm:w-48 sm:h-48">
                 <Image
                   src="/logo.png"
-                  alt="Guayoyo Logo"
+                  alt={`${BRAND_CONFIG.name} Logo`}
                   fill
                   className="object-contain"
                   priority
@@ -71,9 +72,9 @@ function LandingContent() {
 
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tighter bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">
-                Guayoyo
+                {BRAND_CONFIG.name}
               </h1>
-              <p className="text-zinc-400">Cliente Preferencial VIP</p>
+              <p className="text-zinc-400">{BRAND_CONFIG.memberTitle}</p>
             </div>
 
             <div className="flex flex-col gap-4 w-full">

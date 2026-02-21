@@ -8,22 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { QrCode, Gift, Lock, LogOut, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Levels Configuration
-const LEVELS = [
-    { id: 1, name: "Nivel Inicial", visitsRequired: 3, prize: "Café Gratis", color: "from-lime-300 to-green-400" },
-    { id: 2, name: "Nivel Intermedio", visitsRequired: 5, prize: "Desayuno ($6)", color: "from-green-400 to-emerald-500" },
-    { id: 3, name: "Nivel Avanzado", visitsRequired: 8, prize: "Desayuno Premium", color: "from-emerald-500 to-teal-600" },
-    { id: 4, name: "Nivel Experto", visitsRequired: 10, prize: "10 Cafés Gratis", color: "from-teal-600 to-cyan-600" },
-];
-
-const VIP_CARD_DATA = {
-    id: 'vip',
-    name: "Socio VIP",
-    visitsRequired: 0,
-    prize: "10% OFF",
-    isVip: true,
-    color: "from-yellow-500 to-amber-500"
-};
+import { BRAND_CONFIG, LEVELS, VIP_CARD_DATA } from "../brandConfig";
 
 export default function DashboardPage() {
     return (
@@ -36,7 +21,7 @@ export default function DashboardPage() {
 function DashboardContent() {
     const { user, addVisit, redeemPrize, logout } = useLoyalty();
     const router = useRouter();
-    const [showRedeemModal, setShowRedeemModal] = useState<{ show: boolean, levelId: number | null }>({ show: false, levelId: null });
+    const [showRedeemModal, setShowRedeemModal] = useState<{ show: boolean, levelId: string | number | null }>({ show: false, levelId: null });
 
     // Redirect if no user
     useEffect(() => {
@@ -72,6 +57,22 @@ function DashboardContent() {
         confetti(opts);
     };
 
+    const runLargeConfetti = () => {
+        runConfetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    };
+
+    const runSmallConfetti = () => {
+        runConfetti({
+            particleCount: 50,
+            spread: 40,
+            origin: { y: 0.7 }
+        });
+    };
+
     const [isScanning, setIsScanning] = useState(false);
 
     useEffect(() => {
@@ -88,7 +89,7 @@ function DashboardContent() {
                     { facingMode: "environment" },
                     config,
                     (decodedText: string) => {
-                        if (decodedText === "GUAYOYO_SECRET_V1") {
+                        if (decodedText === BRAND_CONFIG.secretCode) {
                             // Stop scanning
                             html5QrCode.stop().then(() => {
                                 html5QrCode.clear();
@@ -103,20 +104,12 @@ function DashboardContent() {
                             for (const level of LEVELS) {
                                 accumulated += level.visitsRequired;
                                 if (newVisits === accumulated) {
-                                    runConfetti({
-                                        particleCount: 150,
-                                        spread: 70,
-                                        origin: { y: 0.6 }
-                                    });
+                                    runLargeConfetti();
                                     break;
                                 }
                             }
                             // Always small confetti for success
-                            runConfetti({
-                                particleCount: 50,
-                                spread: 40,
-                                origin: { y: 0.7 }
-                            });
+                            runSmallConfetti();
                         } else {
                             console.warn("Invalid QR", decodedText);
                         }
@@ -170,7 +163,7 @@ function DashboardContent() {
             <header className="flex justify-between items-center mb-8 pt-4">
                 <div>
                     <h1 className="text-2xl font-bold">Hola, {user.name?.split(" ")[0] || "Miembro"}</h1>
-                    <p className="text-zinc-400 text-sm">Miembro Guayoyo</p>
+                    <p className="text-zinc-400 text-sm">{BRAND_CONFIG.memberTitle}</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={logout}>
                     <LogOut className="w-5 h-5" />
@@ -214,9 +207,9 @@ function DashboardContent() {
                             <div className="relative z-10 flex justify-between items-center">
                                 <div className="flex items-center gap-2">
                                     <div className="w-6 h-6 rounded-full bg-black/10 flex items-center justify-center backdrop-blur-md border border-black/10">
-                                        <span className="font-bold font-serif italic text-black/80 text-xs">G</span>
+                                        <span className="font-bold font-serif italic text-black/80 text-xs">{BRAND_CONFIG.name[0]}</span>
                                     </div>
-                                    <span className="font-semibold tracking-wider text-black/80 text-sm">Guayoyo</span>
+                                    <span className="font-semibold tracking-wider text-black/80 text-sm">{BRAND_CONFIG.name}</span>
                                 </div>
                                 <div className="text-right">
                                     <span className="block text-[0.4rem] uppercase tracking-widest opacity-60 text-black">
@@ -347,9 +340,9 @@ function DashboardContent() {
                                     <div className="relative z-10 flex justify-between items-start">
                                         <div className="flex items-center gap-1">
                                             <div className="w-3 h-3 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
-                                                <span className="font-bold font-serif italic text-white text-[0.4rem]">G</span>
+                                                <span className="font-bold font-serif italic text-white text-[0.4rem]">{BRAND_CONFIG.name[0]}</span>
                                             </div>
-                                            <span className="font-semibold tracking-wider text-white/90 text-[0.4rem]">Guayoyo</span>
+                                            <span className="font-semibold tracking-wider text-white/90 text-[0.4rem]">{BRAND_CONFIG.name}</span>
                                         </div>
                                     </div>
 
@@ -426,7 +419,7 @@ function DashboardContent() {
                                         <Button
                                             className="bg-lime-500 hover:bg-lime-600 text-black border-none"
                                             onClick={() => {
-                                                if (showRedeemModal.levelId) {
+                                                if (showRedeemModal.levelId !== null) {
                                                     redeemPrize(showRedeemModal.levelId);
                                                     setShowRedeemModal({ show: false, levelId: null });
                                                     runConfetti({
