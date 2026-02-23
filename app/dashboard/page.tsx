@@ -89,10 +89,11 @@ function DashboardContent() {
             const width = Math.random() * 2 + 1; // 1px to 3px (thin)
             const height = Math.random() * 12 + 6; // 6px to 18px (elongated)
             const colors = [
-                '#FF4D00', // Bright Orange-Red
-                '#FF9100', // Intense Orange
-                '#FFD700', // Golden Yellow
-                '#FFFFFF'  // White Hot Core
+                '#B22222', // Firebrick Red
+                '#E65100', // Deep Orange
+                '#BF360C', // Burnt Orange/Red
+                '#3E2723', // Dark Brown (Charcoal/Ember base)
+                '#FF3D00'  // Intense Red-Orange
             ];
             const color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -103,11 +104,11 @@ function DashboardContent() {
                     height: `${height}px`,
                     backgroundColor: color,
                     borderRadius: '2px', // Slightly rounded tips
-                    boxShadow: `0 0 ${width * 4}px ${width * 1.5}px ${color}cc, 0 0 ${width * 2}px #fff inset`,
+                    boxShadow: `0 0 ${width * 5}px ${width * 2}px ${color}aa, 0 0 2px rgba(0,0,0,0.5)`,
                     left: `${Math.random() * 100}%`,
                     bottom: '-40px',
                     position: 'absolute' as const,
-                    filter: 'blur(0.5px)',
+                    filter: 'blur(0.4px)',
                     mixBlendMode: 'screen' as any,
                 },
                 xOffset: (Math.random() - 0.5) * 120, // Horizontal drift
