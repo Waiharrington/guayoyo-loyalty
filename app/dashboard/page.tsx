@@ -86,31 +86,37 @@ function DashboardContent() {
 
     const fireSparksEffect = (amount: number = 30) => {
         const newSparks = Array.from({ length: amount }).map((_, i) => {
-            const size = Math.random() * 8 + 4; // 4px to 12px
-            const colors = ['#FF4500', '#FF8C00', '#FFD700', '#f97316'];
+            const width = Math.random() * 2 + 1; // 1px to 3px (thin)
+            const height = Math.random() * 12 + 6; // 6px to 18px (elongated)
+            const colors = [
+                '#FF4D00', // Bright Orange-Red
+                '#FF9100', // Intense Orange
+                '#FFD700', // Golden Yellow
+                '#FFFFFF'  // White Hot Core
+            ];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            const isFlame = Math.random() > 0.5;
+
             return {
                 id: Date.now() + i,
                 style: {
-                    width: `${size}px`,
-                    height: isFlame ? `${size * 1.5}px` : `${size}px`,
+                    width: `${width}px`,
+                    height: `${height}px`,
                     backgroundColor: color,
-                    borderRadius: isFlame ? '40% 40% 60% 60%' : '50%',
-                    boxShadow: `0 0 ${size * 3}px ${size}px ${color}80, 0 0 ${size}px #fff inset`,
+                    borderRadius: '2px', // Slightly rounded tips
+                    boxShadow: `0 0 ${width * 4}px ${width * 1.5}px ${color}cc, 0 0 ${width * 2}px #fff inset`,
                     left: `${Math.random() * 100}%`,
                     bottom: '-40px',
                     position: 'absolute' as const,
-                    filter: 'blur(1px)',
+                    filter: 'blur(0.5px)',
                     mixBlendMode: 'screen' as any,
                 },
-                xOffset: (Math.random() - 0.5) * 150, // Horizontal drift
-                rotation: Math.random() * 360,
+                xOffset: (Math.random() - 0.5) * 120, // Horizontal drift
+                rotation: (Math.random() - 0.5) * 45, // Angled streaks
             };
         });
 
         setSparks(newSparks);
-        setTimeout(() => setSparks([]), 3500); // Wait longer for realistic fade
+        setTimeout(() => setSparks([]), 2500); // Snappier fade for sparks
     };
 
     // Optimized to 30 sparks maximum to prevent framer-motion lag on unmounting/mounting complex SVG components
@@ -243,11 +249,11 @@ function DashboardContent() {
                                     style={spark.style}
                                     initial={{ opacity: 1, y: 0, x: 0, scale: 0 }}
                                     animate={{
-                                        opacity: [0, 1, Math.random() * 0.5 + 0.5, 1, 0], // Twinkle effect
-                                        y: -window.innerHeight * (Math.random() * 0.5 + 0.5), // Rise up 50-100% of screen
+                                        opacity: [0, 1, 0.8, 1, 0], // Flickering
+                                        y: -window.innerHeight * (Math.random() * 0.7 + 0.3), // Vertical ascent
                                         x: spark.xOffset,
-                                        scale: [0, 1.5, 0.5, 0],
-                                        rotate: [spark.rotation, spark.rotation + 180],
+                                        scale: [0, 1.2, 0.8, 0], // Growth and shrinkage
+                                        rotate: [spark.rotation, spark.rotation + (Math.random() - 0.5) * 30], // Slight wobble
                                     }}
                                     transition={{
                                         duration: Math.random() * 2 + 1.5, // 1.5s to 3.5s
