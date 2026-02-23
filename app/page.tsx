@@ -86,7 +86,7 @@ function LandingContent() {
                 </div>
 
                 <div className="space-y-3">
-                  <h1 className="text-4xl sm:text-5xl text-center font-bold tracking-tight text-[#F2E9DD] drop-shadow-md">
+                  <h1 className="text-5xl sm:text-6xl text-center font-normal text-[#F2E9DD] drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] font-[family-name:var(--font-pacifico)] pt-2">
                     Club Parrillero
                   </h1>
                   <p className="text-zinc-300 text-base sm:text-lg text-center font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-sm">
