@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +17,13 @@ import { BRAND_CONFIG } from "./brandConfig";
 export const metadata: Metadata = {
   title: BRAND_CONFIG.fullName,
   description: `Programa de fidelización exclusivo de ${BRAND_CONFIG.name}`,
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
