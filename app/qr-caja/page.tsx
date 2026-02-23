@@ -14,7 +14,7 @@ export default function CashierQRPage() {
                 Muestra este código al cliente para que registre su visita en {BRAND_CONFIG.name}.
             </p>
 
-            <div className="bg-white p-8 rounded-3xl shadow-2xl shadow-emerald-500/20">
+            <div className="bg-white p-8 rounded-3xl shadow-2xl shadow-brand-orange/20">
                 <div style={{ height: "auto", margin: "0 auto", maxWidth: 256, width: "100%" }}>
                     <QRCode
                         size={256}
@@ -26,11 +26,11 @@ export default function CashierQRPage() {
             </div>
 
             <div className="mt-8 flex flex-col gap-2">
-                <p className="text-emerald-400 font-mono text-xs tracking-widest uppercase">
+                <p className="text-brand-orange font-mono text-xs tracking-widest uppercase">
                     {BRAND_CONFIG.fullName.toUpperCase()} SYSTEM
                 </p>
                 <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <div className="w-2 h-2 bg-brand-orange rounded-full animate-pulse" />
                     <span className="text-white/60 text-sm">Sistema Activo</span>
                 </div>
             </div>

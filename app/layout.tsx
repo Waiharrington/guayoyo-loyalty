@@ -25,12 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <main className="min-h-screen flex flex-col relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black">
-          {children}
+        <main className="min-h-screen flex flex-col relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black md:bg-[url('/bg-desktop.png')] md:bg-cover md:bg-center md:bg-fixed">
+          <div className="absolute inset-0 bg-black/40 hidden md:block pointer-events-none" />
+          <div className="relative z-10 flex-col flex flex-1 w-full">
+            {children}
+          </div>
         </main>
       </body>
     </html>
