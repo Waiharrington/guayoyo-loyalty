@@ -72,7 +72,7 @@ function LandingContent() {
             >
               {/* Top Logo Section */}
               <div className="flex flex-col items-center mt-8 sm:mt-12">
-                <div className="relative mb-8">
+                <div className="relative mb-5">
                   <div className="absolute inset-0 bg-brand-orange/40 blur-[40px] rounded-full scale-75" />
                   <div className="relative z-10 w-48 h-48 sm:w-56 sm:h-56">
                     <Image
@@ -85,8 +85,8 @@ function LandingContent() {
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <h1 className="text-5xl sm:text-7xl text-center font-normal text-[#F2E9DD] drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] font-['Daughter_of_Fortune',_sans-serif] pt-4 tracking-wider leading-tight">
+                <div className="space-y-2">
+                  <h1 className="text-[43px] sm:text-[55px] text-center font-normal text-[#F2E9DD] drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] font-[family-name:var(--font-pacifico)] leading-tight">
                     Club Parrillero
                   </h1>
                   <p className="text-zinc-300 text-base sm:text-lg text-center font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-sm">
